@@ -42,13 +42,13 @@ export const GeneralProvider: React.FC<{ children: React.ReactNode }> = ({
   let savedEndDate = null;
   let savedAvailableEndDates = [];
   if (typeof window !== 'undefined') {
-    savedDeparture = localStorage.getItem('departure');
-    savedArrival = localStorage.getItem('arrival');
-    savedCurrency = localStorage.getItem('currency');
-    savedStartDate = localStorage.getItem('startDate');
-    savedEndDate = localStorage.getItem('endDate');
+    savedDeparture = sessionStorage.getItem('departure');
+    savedArrival = sessionStorage.getItem('arrival');
+    savedCurrency = sessionStorage.getItem('currency');
+    savedStartDate = sessionStorage.getItem('startDate');
+    savedEndDate = sessionStorage.getItem('endDate');
     savedAvailableEndDates = JSON.parse(
-      localStorage.getItem('availableEndDates') || '[]'
+      sessionStorage.getItem('availableEndDates') || '[]'
     );
   }
 
@@ -70,13 +70,13 @@ export const GeneralProvider: React.FC<{ children: React.ReactNode }> = ({
   // Save state to localStorage when it changes
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      if (departure) localStorage.setItem('departure', departure);
-      if (arrival) localStorage.setItem('arrival', arrival);
-      if (currency) localStorage.setItem('currency', currency);
-      if (startDate) localStorage.setItem('startDate', startDate);
-      if (endDate) localStorage.setItem('endDate', endDate);
+      if (departure) sessionStorage.setItem('departure', departure);
+      if (arrival) sessionStorage.setItem('arrival', arrival);
+      if (currency) sessionStorage.setItem('currency', currency);
+      if (startDate) sessionStorage.setItem('startDate', startDate);
+      if (endDate) sessionStorage.setItem('endDate', endDate);
       if (availableEndDates)
-        localStorage.setItem(
+        sessionStorage.setItem(
           'availableEndDates',
           JSON.stringify(availableEndDates)
         );
