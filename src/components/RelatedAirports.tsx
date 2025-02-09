@@ -86,12 +86,9 @@ const RelatedAirports: React.FC<RelatedAirportsProps> = ({
             <Link
               key={airport.code}
               href={
-                direction === 'departure' && !arrival
+                direction === 'departure'
                   ? '/arrival-countries'
-                  : (!!departure && direction === 'arrival') ||
-                      (direction === 'departure' && !!arrival)
-                    ? '/available-dates'
-                    : '/departure-countries'
+                  : '/available-dates'
               }
               passHref
               onClick={() =>
