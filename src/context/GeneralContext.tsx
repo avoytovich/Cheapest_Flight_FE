@@ -35,14 +35,22 @@ const GeneralContext = createContext<GeneralContextType>({
 export const GeneralProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const savedDeparture = localStorage.getItem('departure');
-  const savedArrival = localStorage.getItem('arrival');
-  const savedCurrency = localStorage.getItem('currency');
-  const savedStartDate = localStorage.getItem('startDate');
-  const savedEndDate = localStorage.getItem('endDate');
-  const savedAvailableEndDates = JSON.parse(
-    localStorage.getItem('availableEndDates') || '[]'
-  );
+  let savedDeparture = null;
+  let savedArrival = null;
+  let savedCurrency = null;
+  let savedStartDate = null;
+  let savedEndDate = null;
+  let savedAvailableEndDates = [];
+  if (typeof window !== 'undefined') {
+    savedDeparture = localStorage.getItem('departure');
+    savedArrival = localStorage.getItem('arrival');
+    savedCurrency = localStorage.getItem('currency');
+    savedStartDate = localStorage.getItem('startDate');
+    savedEndDate = localStorage.getItem('endDate');
+    savedAvailableEndDates = JSON.parse(
+      localStorage.getItem('availableEndDates') || '[]'
+    );
+  }
 
   const [departure, setDeparture] = useState<string | null>(
     savedDeparture || null
@@ -61,16 +69,18 @@ export const GeneralProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Save state to localStorage when it changes
   useEffect(() => {
-    if (departure) localStorage.setItem('departure', departure);
-    if (arrival) localStorage.setItem('arrival', arrival);
-    if (currency) localStorage.setItem('currency', currency);
-    if (startDate) localStorage.setItem('startDate', startDate);
-    if (endDate) localStorage.setItem('endDate', endDate);
-    if (availableEndDates)
-      localStorage.setItem(
-        'availableEndDates',
-        JSON.stringify(availableEndDates)
-      );
+    if (typeof window !== 'undefined') {
+      if (departure) localStorage.setItem('departure', departure);
+      if (arrival) localStorage.setItem('arrival', arrival);
+      if (currency) localStorage.setItem('currency', currency);
+      if (startDate) localStorage.setItem('startDate', startDate);
+      if (endDate) localStorage.setItem('endDate', endDate);
+      if (availableEndDates)
+        localStorage.setItem(
+          'availableEndDates',
+          JSON.stringify(availableEndDates)
+        );
+    }
   }, [departure, arrival, startDate, endDate, availableEndDates]);
 
   return (
