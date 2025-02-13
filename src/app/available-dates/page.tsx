@@ -18,8 +18,6 @@ import 'react-day-picker/dist/style.css';
 import { useGeneral } from '@/context/GeneralContext';
 
 export default function AvailableDates() {
-  const [availableStartDates, setAvailableStartDates] = useState<string[]>([]);
-  const [availableEndDates, setAvailableEndDates] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -32,7 +30,10 @@ export default function AvailableDates() {
     setStartDate,
     endDate,
     setEndDate,
-    setAvailableEndDates: setAvailableDates,
+    availableStartDates,
+    setAvailableStartDates,
+    availableEndDates,
+    setAvailableEndDates,
   } = useGeneral();
 
   useEffect(() => {
@@ -55,7 +56,6 @@ export default function AvailableDates() {
 
         setAvailableStartDates(startData);
         setAvailableEndDates(endData);
-        setAvailableDates(endData);
       } catch (err) {
         setError((err as Error).message);
       } finally {

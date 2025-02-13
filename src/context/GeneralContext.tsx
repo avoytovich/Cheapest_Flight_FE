@@ -4,15 +4,17 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface GeneralContextType {
   departure: string | null;
-  setDeparture: (airport: string) => void;
+  setDeparture: (airport: string | null) => void;
   arrival: string | null;
-  setArrival: (airport: string) => void;
+  setArrival: (airport: string | null) => void;
   currency: string | null;
   setCurrency: (currency: string) => void;
   startDate: string | null;
-  setStartDate: (date: string) => void;
+  setStartDate: (date: string | null) => void;
   endDate: string | null;
-  setEndDate: (date: string) => void;
+  setEndDate: (date: string | null) => void;
+  availableStartDates: [string] | [];
+  setAvailableStartDates: (date: [string]) => void;
   availableEndDates: [string] | [];
   setAvailableEndDates: (date: [string]) => void;
 }
@@ -28,6 +30,8 @@ const GeneralContext = createContext<GeneralContextType>({
   setStartDate: () => {},
   endDate: null,
   setEndDate: () => {},
+  availableStartDates: [],
+  setAvailableStartDates: () => {},
   availableEndDates: [],
   setAvailableEndDates: () => {},
 });
@@ -40,6 +44,7 @@ export const GeneralProvider: React.FC<{ children: React.ReactNode }> = ({
   let savedCurrency = null;
   let savedStartDate = null;
   let savedEndDate = null;
+  let savedAvailableStartDates = [];
   let savedAvailableEndDates = [];
   if (typeof window !== 'undefined') {
     savedDeparture = sessionStorage.getItem('departure');
@@ -47,6 +52,9 @@ export const GeneralProvider: React.FC<{ children: React.ReactNode }> = ({
     savedCurrency = sessionStorage.getItem('currency');
     savedStartDate = sessionStorage.getItem('startDate');
     savedEndDate = sessionStorage.getItem('endDate');
+    savedAvailableStartDates = JSON.parse(
+      sessionStorage.getItem('availableStartDates') || '[]'
+    );
     savedAvailableEndDates = JSON.parse(
       sessionStorage.getItem('availableEndDates') || '[]'
     );
@@ -63,11 +71,14 @@ export const GeneralProvider: React.FC<{ children: React.ReactNode }> = ({
     savedStartDate || null
   );
   const [endDate, setEndDate] = useState<string | null>(savedEndDate || null);
+  const [availableStartDates, setAvailableStartDates] = useState<[string] | []>(
+    savedAvailableStartDates || []
+  );
   const [availableEndDates, setAvailableEndDates] = useState<[string] | []>(
     savedAvailableEndDates || []
   );
 
-  // Save state to localStorage when it changes
+  // Save state to sessionStorage when it changes
   useEffect(() => {
     if (typeof window !== 'undefined') {
       if (departure) sessionStorage.setItem('departure', departure);
@@ -75,13 +86,25 @@ export const GeneralProvider: React.FC<{ children: React.ReactNode }> = ({
       if (currency) sessionStorage.setItem('currency', currency);
       if (startDate) sessionStorage.setItem('startDate', startDate);
       if (endDate) sessionStorage.setItem('endDate', endDate);
+      if (availableStartDates)
+        sessionStorage.setItem(
+          'availableStartDates',
+          JSON.stringify(availableStartDates)
+        );
       if (availableEndDates)
         sessionStorage.setItem(
           'availableEndDates',
           JSON.stringify(availableEndDates)
         );
     }
-  }, [departure, arrival, startDate, endDate, availableEndDates]);
+  }, [
+    departure,
+    arrival,
+    startDate,
+    endDate,
+    availableStartDates,
+    availableEndDates,
+  ]);
 
   return (
     <GeneralContext.Provider
@@ -96,6 +119,8 @@ export const GeneralProvider: React.FC<{ children: React.ReactNode }> = ({
         setStartDate,
         endDate,
         setEndDate,
+        availableStartDates,
+        setAvailableStartDates,
         availableEndDates,
         setAvailableEndDates,
       }}
