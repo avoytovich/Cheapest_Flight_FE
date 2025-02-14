@@ -34,9 +34,23 @@ const RelatedAirports: React.FC<RelatedAirportsProps> = ({
   loading,
   error,
 }) => {
-  const { departure, setDeparture, arrival, setArrival } = useGeneral();
+  const { departure, setDeparture, setArrival, setStartDate, setEndDate } =
+    useGeneral();
   const params = useParams();
   const id = params?.id as string;
+
+  const handleDeparture = (airport: string) => {
+    setDeparture(airport);
+    setArrival(null);
+    setStartDate(null);
+    setEndDate(null);
+  };
+
+  const handleArrival = (airport: string) => {
+    setArrival(airport);
+    setStartDate(null);
+    setEndDate(null);
+  };
 
   if (loading)
     return (
@@ -68,9 +82,6 @@ const RelatedAirports: React.FC<RelatedAirportsProps> = ({
       </Typography>
     );
 
-  console.log('departure', departure);
-  console.log('arrival', arrival);
-
   return (
     <Box p={4} className="h-screen">
       <Typography variant="h4" textAlign="center" gutterBottom>
@@ -93,8 +104,8 @@ const RelatedAirports: React.FC<RelatedAirportsProps> = ({
               passHref
               onClick={() =>
                 direction === 'departure'
-                  ? setDeparture(airport.code)
-                  : setArrival(airport.code)
+                  ? handleDeparture(airport.code)
+                  : handleArrival(airport.code)
               }
             >
               <Card sx={{ p: 2, textAlign: 'center', cursor: 'pointer' }}>
