@@ -64,7 +64,7 @@ export default function AvailableDates() {
     };
 
     fetchAvailableDates();
-  }, [departure, arrival]);
+  }, [departure, arrival, setAvailableStartDates]);
 
   const handleConfirm = () => {
     setConfirmOpen(false);
