@@ -36,6 +36,11 @@ export default function AvailableDates() {
     setAvailableEndDates,
   } = useGeneral();
 
+  const handleConfirm = () => {
+    setConfirmOpen(false);
+    router.push('/valuable-info');
+  };
+
   useEffect(() => {
     const fetchAvailableDates = async () => {
       try {
@@ -64,12 +69,7 @@ export default function AvailableDates() {
     };
 
     fetchAvailableDates();
-  }, [departure, arrival]);
-
-  const handleConfirm = () => {
-    setConfirmOpen(false);
-    router.push('/valuable-info');
-  };
+  }, [departure, arrival, setAvailableStartDates, setAvailableEndDates]);
 
   if (loading)
     return (

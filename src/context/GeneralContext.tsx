@@ -102,6 +102,7 @@ export const GeneralProvider: React.FC<{ children: React.ReactNode }> = ({
     arrival,
     startDate,
     endDate,
+    currency,
     availableStartDates,
     availableEndDates,
   ]);

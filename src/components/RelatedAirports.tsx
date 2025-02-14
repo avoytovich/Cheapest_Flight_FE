@@ -34,14 +34,8 @@ const RelatedAirports: React.FC<RelatedAirportsProps> = ({
   loading,
   error,
 }) => {
-  const {
-    departure,
-    setDeparture,
-    arrival,
-    setArrival,
-    setStartDate,
-    setEndDate,
-  } = useGeneral();
+  const { departure, setDeparture, setArrival, setStartDate, setEndDate } =
+    useGeneral();
   const params = useParams();
   const id = params?.id as string;
 
