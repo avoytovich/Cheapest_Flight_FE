@@ -43,8 +43,8 @@
     "typescript": "^5"
   },
   "lint-staged": {
-    "*.js": "eslint --fix",
-    "*.ts": "eslint --fix",
-    "*.tsx": "eslint --fix"
+    "*.js": "eslint --fix --max-warnings 0",
+    "*.ts": "eslint --fix --max-warnings 0",
+    "*.tsx": "eslint --fix --max-warnings 0"
   }
 }
