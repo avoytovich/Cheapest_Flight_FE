@@ -13,10 +13,10 @@ interface GeneralContextType {
   setStartDate: (date: string | null) => void;
   endDate: string | null;
   setEndDate: (date: string | null) => void;
-  availableStartDates: [string] | [];
-  setAvailableStartDates: (date: [string]) => void;
-  availableEndDates: [string] | [];
-  setAvailableEndDates: (date: [string]) => void;
+  availableStartDates: string[] | [];
+  setAvailableStartDates: (date: string[]) => void;
+  availableEndDates: string[] | [];
+  setAvailableEndDates: (date: string[]) => void;
 }
 
 const GeneralContext = createContext<GeneralContextType>({
@@ -71,10 +71,10 @@ export const GeneralProvider: React.FC<{ children: React.ReactNode }> = ({
     savedStartDate || null
   );
   const [endDate, setEndDate] = useState<string | null>(savedEndDate || null);
-  const [availableStartDates, setAvailableStartDates] = useState<[string] | []>(
+  const [availableStartDates, setAvailableStartDates] = useState<string[] | []>(
     savedAvailableStartDates || []
   );
-  const [availableEndDates, setAvailableEndDates] = useState<[string] | []>(
+  const [availableEndDates, setAvailableEndDates] = useState<string[] | []>(
     savedAvailableEndDates || []
   );
 

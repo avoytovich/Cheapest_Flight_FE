@@ -30,9 +30,9 @@ export default function AvailableDates() {
     setStartDate,
     endDate,
     setEndDate,
-    availableStartDates,
+    availableStartDates = [] as string[],
     setAvailableStartDates,
-    availableEndDates,
+    availableEndDates = [] as string[],
     setAvailableEndDates,
   } = useGeneral();
 
