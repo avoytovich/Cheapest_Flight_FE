@@ -45,7 +45,7 @@ const ArrivalAirports = () => {
     };
 
     fetchAirports();
-  }, []);
+  }, [departure]);
 
   return (
     <RelatedAirports
