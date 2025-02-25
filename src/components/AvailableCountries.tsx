@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { CircularProgress, Box, Card, Typography } from '@mui/material';
 
 import { capitalizeFirstLetter } from '@/utils';
+import { useGeneral } from '@/context/GeneralContext';
 
 type Direction = 'departure' | 'arrival';
 
@@ -16,36 +17,19 @@ interface Country {
 interface AvailableCountriesProps {
   direction: Direction;
   countries: Country[];
-  setCurrency?: (currency: string) => void;
-  loading: boolean;
-  error: string | null;
 }
 
 const AvailableCountries: React.FC<AvailableCountriesProps> = ({
   direction,
   countries,
-  setCurrency,
-  loading,
-  error,
 }) => {
-  if (loading) {
+  const { setCurrency, departure, arrival, startDate, endDate } = useGeneral();
+
+  if (!countries) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-      >
+      <Box display="flex" justifyContent="center" alignItems="center" p={4}>
         <CircularProgress />
       </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Typography variant="h6" color="error" textAlign="center">
-        Error: {error}
-      </Typography>
     );
   }
 
@@ -78,8 +62,15 @@ const AvailableCountries: React.FC<AvailableCountriesProps> = ({
               return (
                 <Link
                   key={country.name}
-                  href={`/${direction}-countries/${country.code}`}
-                  onClick={() => setCurrency && setCurrency(country.currency)}
+                  href={{
+                    pathname: `/${direction}-countries/${country.code}`,
+                    query: {
+                      ...(departure && { departure }),
+                      ...(arrival && { arrival }),
+                      ...(startDate && { startDate }),
+                      ...(endDate && { endDate }),
+                    },
+                  }}
                   passHref
                   prefetch
                 >
@@ -92,6 +83,7 @@ const AvailableCountries: React.FC<AvailableCountriesProps> = ({
                       textAlign: 'center',
                       backgroundColor: 'lightgray',
                     }}
+                    onClick={() => setCurrency(country.currency)}
                   >
                     {flagUrl && (
                       <Box

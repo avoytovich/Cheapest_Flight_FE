@@ -1,15 +1,15 @@
 'use client';
 
-import Link from 'next/link';
 import { Box, Card, Typography } from '@mui/material';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
 
 import { useGeneral } from '@/context/GeneralContext';
 import { capitalizeFirstLetter } from '@/utils';
 
 type Direction = 'departure' | 'arrival';
 
-interface Airport {
+type DepartureAirport = {
   name: string;
   code: string;
   city: {
@@ -19,20 +19,18 @@ interface Airport {
     name: string;
     code: string;
   };
-}
+};
+
+type ArrivalAirport = { arrivalAirport: DepartureAirport };
 
 interface RelatedAirportsProps {
   direction: Direction;
-  airports: Airport[];
-  loading: boolean;
-  error: string | null;
+  airports: DepartureAirport[] | ArrivalAirport[];
 }
 
 const RelatedAirports: React.FC<RelatedAirportsProps> = ({
   direction,
   airports,
-  loading,
-  error,
 }) => {
   const { departure, setDeparture, setArrival, setStartDate, setEndDate } =
     useGeneral();
@@ -52,28 +50,19 @@ const RelatedAirports: React.FC<RelatedAirportsProps> = ({
     setEndDate(null);
   };
 
-  if (loading)
+  if (!airports) {
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-      >
-        <Typography>Loading...</Typography>
+      <Box display="flex" justifyContent="center" alignItems="center" p={4}>
+        <Typography variant="h6">Loading...</Typography>
       </Box>
     );
+  }
 
-  if (error)
-    return (
-      <Typography variant="h6" color="error" textAlign="center">
-        Error: {error}
-      </Typography>
-    );
-
-  const filteredAirports = airports.filter(
-    (airport) => id && airport.country.code === id
-  );
+  const filteredAirports = airports.filter((airport) => {
+    if (direction === 'departure')
+      return (airport as DepartureAirport).country.code === id;
+    return (airport as ArrivalAirport).arrivalAirport.country.code === id;
+  });
 
   if (filteredAirports.length === 0)
     return (
@@ -85,7 +74,7 @@ const RelatedAirports: React.FC<RelatedAirportsProps> = ({
   return (
     <Box p={4} className="h-screen">
       <Typography variant="h4" textAlign="center" gutterBottom>
-        {`${capitalizeFirstLetter(direction)} airports in ${filteredAirports[0].country.name}`}
+        {`${capitalizeFirstLetter(direction)} airports in ${direction === 'departure' ? (filteredAirports[0] as DepartureAirport).country.name : (filteredAirports[0] as ArrivalAirport).arrivalAirport.country.name}`}
       </Typography>
       <Box margin="0 auto" maxWidth="75%">
         <Box
@@ -95,23 +84,37 @@ const RelatedAirports: React.FC<RelatedAirportsProps> = ({
         >
           {filteredAirports.map((airport) => (
             <Link
-              key={airport.code}
+              key={
+                direction === 'departure'
+                  ? (airport as DepartureAirport).code
+                  : (airport as ArrivalAirport).arrivalAirport.code
+              }
               href={
                 direction === 'departure'
-                  ? '/arrival-countries'
-                  : '/available-dates'
+                  ? `/arrival-countries?departure=${(airport as DepartureAirport).code}`
+                  : `/available-dates?departure=${departure}&arrival=${(airport as ArrivalAirport).arrivalAirport.code}`
               }
               passHref
-              onClick={() =>
-                direction === 'departure'
-                  ? handleDeparture(airport.code)
-                  : handleArrival(airport.code)
-              }
             >
-              <Card sx={{ p: 2, textAlign: 'center', cursor: 'pointer' }}>
-                <Typography variant="subtitle1">{airport.city.name}</Typography>
+              <Card
+                sx={{ p: 2, textAlign: 'center', cursor: 'pointer' }}
+                onClick={() =>
+                  direction === 'departure'
+                    ? handleDeparture((airport as DepartureAirport).code)
+                    : handleArrival(
+                        (airport as ArrivalAirport).arrivalAirport.code
+                      )
+                }
+              >
+                <Typography variant="subtitle1">
+                  {direction === 'departure'
+                    ? (airport as DepartureAirport).city.name
+                    : (airport as ArrivalAirport).arrivalAirport.city.name}
+                </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  {airport.code}
+                  {direction === 'departure'
+                    ? (airport as DepartureAirport).code
+                    : (airport as ArrivalAirport).arrivalAirport.code}
                 </Typography>
               </Card>
             </Link>

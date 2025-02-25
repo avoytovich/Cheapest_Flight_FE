@@ -51,7 +51,19 @@ export default function LayoutWrapper({
           {/* Steps with dynamic highlighting and conditional visibility */}
           <div className="space-y-3 space-x-1 text-gray-400">
             <Link
-              href={isDepartureCompleted ? '/departure-countries' : '#'}
+              href={
+                isDepartureCompleted
+                  ? {
+                      pathname: '/departure-countries',
+                      query: {
+                        ...(departure && { departure }),
+                        ...(arrival && { arrival }),
+                        ...(startDate && { startDate }),
+                        ...(endDate && { endDate }),
+                      },
+                    }
+                  : '#'
+              }
               className={
                 !isDepartureCompleted ? 'cursor-not-allowed opacity-50' : ''
               }
@@ -71,7 +83,19 @@ export default function LayoutWrapper({
             </Link>
 
             <Link
-              href={isDepartureCompleted ? '/arrival-countries' : '#'}
+              href={
+                isDepartureCompleted
+                  ? {
+                      pathname: '/arrival-countries',
+                      query: {
+                        ...(departure && { departure }),
+                        ...(arrival && { arrival }),
+                        ...(startDate && { startDate }),
+                        ...(endDate && { endDate }),
+                      },
+                    }
+                  : '#'
+              }
               className={
                 !isDepartureCompleted ? 'cursor-not-allowed opacity-50' : ''
               }
@@ -91,7 +115,19 @@ export default function LayoutWrapper({
             </Link>
 
             <Link
-              href={isArrivalCompleted ? '/available-dates' : '#'}
+              href={
+                isArrivalCompleted
+                  ? {
+                      pathname: '/available-dates',
+                      query: {
+                        ...(departure && { departure }),
+                        ...(arrival && { arrival }),
+                        ...(startDate && { startDate }),
+                        ...(endDate && { endDate }),
+                      },
+                    }
+                  : '#'
+              }
               className={
                 !isArrivalCompleted ? 'cursor-not-allowed opacity-50' : ''
               }
@@ -111,7 +147,19 @@ export default function LayoutWrapper({
             </Link>
 
             <Link
-              href={isDatesCompleted ? '/valuable-info' : '#'}
+              href={
+                isDatesCompleted
+                  ? {
+                      pathname: '/valuable-info',
+                      query: {
+                        ...(departure && { departure }),
+                        ...(arrival && { arrival }),
+                        ...(startDate && { startDate }),
+                        ...(endDate && { endDate }),
+                      },
+                    }
+                  : '#'
+              }
               className={
                 !isDatesCompleted ? 'cursor-not-allowed opacity-50' : ''
               }
