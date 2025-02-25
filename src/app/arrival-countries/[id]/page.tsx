@@ -1,60 +1,27 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-
 import RelatedAirports from '@/components/RelatedAirports';
-import { useGeneral } from '@/context/GeneralContext';
 
-interface Airport {
-  name: string;
-  code: string;
-  city: {
-    name: string;
-  };
-  country: {
-    name: string;
-    code: string;
-  };
+async function getArrivalAirports(departure: string) {
+  const res = await fetch(
+    `https://www.ryanair.com/api/views/locate/searchWidget/routes/en/airport/${departure}`,
+    { cache: 'no-store' } // Disable caching
+  );
+  if (!res.ok) throw new Error('Failed to fetch arrival airports');
+  return res.json();
 }
 
-const ArrivalAirports = () => {
-  const [airports, setAirports] = useState<Airport[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const { departure } = useGeneral();
-
-  useEffect(() => {
-    const fetchAirports = async () => {
-      try {
-        const response = await fetch(
-          `https://www.ryanair.com/api/views/locate/searchWidget/routes/en/airport/${departure}`
-        );
-        if (!response.ok) {
-          throw new Error('Failed to fetch airports');
-        }
-        const data = await response.json();
-        setAirports(
-          data.map((each: { arrivalAirport: Airport }) => each.arrivalAirport)
-        );
-      } catch (err) {
-        setError((err as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAirports();
-  }, [departure]);
-
-  return (
-    <RelatedAirports
-      direction="arrival"
-      airports={airports}
-      loading={loading}
-      error={error}
-    />
-  );
+const GetArrivalAirports = async ({
+  searchParams,
+}: {
+  searchParams: { departure: string };
+}) => {
+  try {
+    const { departure } = searchParams;
+    const arrivalAirports = await getArrivalAirports(departure);
+    return <RelatedAirports direction="arrival" airports={arrivalAirports} />;
+  } catch (error) {
+    console.error(error);
+    return <div>Failed to fetch arrival airports </div>;
+  }
 };
 
-export default ArrivalAirports;
+export default GetArrivalAirports;

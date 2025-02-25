@@ -1,6 +1,7 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 interface GeneralContextType {
   departure: string | null;
@@ -36,76 +37,38 @@ const GeneralContext = createContext<GeneralContextType>({
   setAvailableEndDates: () => {},
 });
 
-export const GeneralProvider: React.FC<{ children: React.ReactNode }> = ({
+const GeneralProviderContent: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  let savedDeparture = null;
-  let savedArrival = null;
-  let savedCurrency = null;
-  let savedStartDate = null;
-  let savedEndDate = null;
-  let savedAvailableStartDates = [];
-  let savedAvailableEndDates = [];
-  if (typeof window !== 'undefined') {
-    savedDeparture = sessionStorage.getItem('departure');
-    savedArrival = sessionStorage.getItem('arrival');
-    savedCurrency = sessionStorage.getItem('currency');
-    savedStartDate = sessionStorage.getItem('startDate');
-    savedEndDate = sessionStorage.getItem('endDate');
-    savedAvailableStartDates = JSON.parse(
-      sessionStorage.getItem('availableStartDates') || '[]'
-    );
-    savedAvailableEndDates = JSON.parse(
-      sessionStorage.getItem('availableEndDates') || '[]'
-    );
-  }
+  const searchParams = useSearchParams();
+  const params = React.useMemo(
+    () => new URLSearchParams(searchParams.toString()),
+    [searchParams]
+  );
 
-  const [departure, setDeparture] = useState<string | null>(
-    savedDeparture || null
+  const savedDeparture = params.get('departure') || null;
+  const savedArrival = params.get('arrival') || null;
+  const savedCurrency = params.get('currency') || null;
+  const savedStartDate = params.get('startDate') || null;
+  const savedEndDate = params.get('endDate') || null;
+  const savedAvailableStartDates = JSON.parse(
+    params.get('availableStartDates') || '[]'
   );
-  const [arrival, setArrival] = useState<string | null>(savedArrival || null);
-  const [currency, setCurrency] = useState<string | null>(
-    savedCurrency || null
+  const savedAvailableEndDates = JSON.parse(
+    params.get('availableEndDates') || '[]'
   );
-  const [startDate, setStartDate] = useState<string | null>(
-    savedStartDate || null
-  );
-  const [endDate, setEndDate] = useState<string | null>(savedEndDate || null);
+
+  const [departure, setDeparture] = useState<string | null>(savedDeparture);
+  const [arrival, setArrival] = useState<string | null>(savedArrival);
+  const [currency, setCurrency] = useState<string | null>(savedCurrency);
+  const [startDate, setStartDate] = useState<string | null>(savedStartDate);
+  const [endDate, setEndDate] = useState<string | null>(savedEndDate);
   const [availableStartDates, setAvailableStartDates] = useState<string[] | []>(
     savedAvailableStartDates || []
   );
   const [availableEndDates, setAvailableEndDates] = useState<string[] | []>(
     savedAvailableEndDates || []
   );
-
-  // Save state to sessionStorage when it changes
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      if (departure) sessionStorage.setItem('departure', departure);
-      if (arrival) sessionStorage.setItem('arrival', arrival);
-      if (currency) sessionStorage.setItem('currency', currency);
-      if (startDate) sessionStorage.setItem('startDate', startDate);
-      if (endDate) sessionStorage.setItem('endDate', endDate);
-      if (availableStartDates)
-        sessionStorage.setItem(
-          'availableStartDates',
-          JSON.stringify(availableStartDates)
-        );
-      if (availableEndDates)
-        sessionStorage.setItem(
-          'availableEndDates',
-          JSON.stringify(availableEndDates)
-        );
-    }
-  }, [
-    departure,
-    arrival,
-    startDate,
-    endDate,
-    currency,
-    availableStartDates,
-    availableEndDates,
-  ]);
 
   return (
     <GeneralContext.Provider
@@ -128,6 +91,16 @@ export const GeneralProvider: React.FC<{ children: React.ReactNode }> = ({
     >
       {children}
     </GeneralContext.Provider>
+  );
+};
+
+export const GeneralProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <GeneralProviderContent>{children}</GeneralProviderContent>
+    </Suspense>
   );
 };
 
