@@ -23,7 +23,8 @@ const AvailableCountries: React.FC<AvailableCountriesProps> = ({
   direction,
   countries,
 }) => {
-  const { setCurrency, departure, arrival, startDate, endDate } = useGeneral();
+  const { setCurrency, departure, arrival, startDate, endDate, currency } =
+    useGeneral();
 
   if (!countries) {
     return (
@@ -69,6 +70,7 @@ const AvailableCountries: React.FC<AvailableCountriesProps> = ({
                       ...(arrival && { arrival }),
                       ...(startDate && { startDate }),
                       ...(endDate && { endDate }),
+                      ...(currency && { currency }),
                     },
                   }}
                   passHref
@@ -83,7 +85,11 @@ const AvailableCountries: React.FC<AvailableCountriesProps> = ({
                       textAlign: 'center',
                       backgroundColor: 'lightgray',
                     }}
-                    onClick={() => setCurrency(country.currency)}
+                    onClick={() =>
+                      direction === 'departure'
+                        ? setCurrency(country.currency)
+                        : () => {}
+                    }
                   >
                     {flagUrl && (
                       <Box

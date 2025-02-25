@@ -24,7 +24,7 @@ export default function LayoutWrapper({
 }: {
   children: React.ReactNode;
 }) {
-  const { departure, arrival, startDate, endDate } = useGeneral();
+  const { departure, arrival, startDate, endDate, currency } = useGeneral();
   const pathname = usePathname();
   const isFirstPage = pathname === '/'; // Hide for the first page
 
@@ -60,6 +60,7 @@ export default function LayoutWrapper({
                         ...(arrival && { arrival }),
                         ...(startDate && { startDate }),
                         ...(endDate && { endDate }),
+                        ...(currency && { currency }),
                       },
                     }
                   : '#'
@@ -92,6 +93,7 @@ export default function LayoutWrapper({
                         ...(arrival && { arrival }),
                         ...(startDate && { startDate }),
                         ...(endDate && { endDate }),
+                        ...(currency && { currency }),
                       },
                     }
                   : '#'
@@ -124,6 +126,7 @@ export default function LayoutWrapper({
                         ...(arrival && { arrival }),
                         ...(startDate && { startDate }),
                         ...(endDate && { endDate }),
+                        ...(currency && { currency }),
                       },
                     }
                   : '#'
@@ -156,6 +159,7 @@ export default function LayoutWrapper({
                         ...(arrival && { arrival }),
                         ...(startDate && { startDate }),
                         ...(endDate && { endDate }),
+                        ...(currency && { currency }),
                       },
                     }
                   : '#'

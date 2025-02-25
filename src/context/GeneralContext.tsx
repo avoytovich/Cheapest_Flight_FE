@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 interface GeneralContextType {
@@ -37,7 +37,7 @@ const GeneralContext = createContext<GeneralContextType>({
   setAvailableEndDates: () => {},
 });
 
-export const GeneralProvider: React.FC<{ children: React.ReactNode }> = ({
+const GeneralProviderContent: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const searchParams = useSearchParams();
@@ -91,6 +91,16 @@ export const GeneralProvider: React.FC<{ children: React.ReactNode }> = ({
     >
       {children}
     </GeneralContext.Provider>
+  );
+};
+
+export const GeneralProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <GeneralProviderContent>{children}</GeneralProviderContent>
+    </Suspense>
   );
 };
 

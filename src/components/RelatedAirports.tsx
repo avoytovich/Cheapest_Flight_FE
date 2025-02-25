@@ -32,8 +32,14 @@ const RelatedAirports: React.FC<RelatedAirportsProps> = ({
   direction,
   airports,
 }) => {
-  const { departure, setDeparture, setArrival, setStartDate, setEndDate } =
-    useGeneral();
+  const {
+    departure,
+    setDeparture,
+    setArrival,
+    setStartDate,
+    setEndDate,
+    currency,
+  } = useGeneral();
   const params = useParams();
   const id = params?.id as string;
 
@@ -91,8 +97,8 @@ const RelatedAirports: React.FC<RelatedAirportsProps> = ({
               }
               href={
                 direction === 'departure'
-                  ? `/arrival-countries?departure=${(airport as DepartureAirport).code}`
-                  : `/available-dates?departure=${departure}&arrival=${(airport as ArrivalAirport).arrivalAirport.code}`
+                  ? `/arrival-countries?departure=${(airport as DepartureAirport).code}&currency=${currency}`
+                  : `/available-dates?departure=${departure}&arrival=${(airport as ArrivalAirport).arrivalAirport.code}&currency=${currency}`
               }
               passHref
             >
