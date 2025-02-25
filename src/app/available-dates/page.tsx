@@ -38,7 +38,8 @@ export default function AvailableDates() {
 
   const handleConfirm = () => {
     setConfirmOpen(false);
-    router.push('/valuable-info');
+    const queryParams = new URLSearchParams(window.location.search);
+    router.push(`/valuable-info?${queryParams.toString()}`);
   };
 
   useEffect(() => {
@@ -105,16 +106,44 @@ export default function AvailableDates() {
             availableStartDates.includes(format(range.from, 'yyyy-MM-dd'))
           ) {
             setStartDate(format(range.from, 'yyyy-MM-dd'));
+            const queryParams = new URLSearchParams(window.location.search);
+            queryParams.set('startDate', format(range.from, 'yyyy-MM-dd'));
+            window.history.replaceState(
+              null,
+              '',
+              `${window.location.pathname}?${queryParams.toString()}`
+            );
           } else {
             setStartDate('');
+            const queryParams = new URLSearchParams(window.location.search);
+            queryParams.delete('startDate');
+            window.history.replaceState(
+              null,
+              '',
+              `${window.location.pathname}?${queryParams.toString()}`
+            );
           }
           if (
             range?.to &&
             availableEndDates.includes(format(range.to, 'yyyy-MM-dd'))
           ) {
             setEndDate(format(range.to, 'yyyy-MM-dd'));
+            const queryParams = new URLSearchParams(window.location.search);
+            queryParams.set('endDate', format(range.to, 'yyyy-MM-dd'));
+            window.history.replaceState(
+              null,
+              '',
+              `${window.location.pathname}?${queryParams.toString()}`
+            );
           } else {
             setEndDate('');
+            const queryParams = new URLSearchParams(window.location.search);
+            queryParams.delete('endDate');
+            window.history.replaceState(
+              null,
+              '',
+              `${window.location.pathname}?${queryParams.toString()}`
+            );
           }
         }}
         modifiers={{
