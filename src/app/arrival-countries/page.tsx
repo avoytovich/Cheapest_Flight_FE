@@ -1,17 +1,19 @@
 import AvailableCountries from '@/components/AvailableCountries';
-
-async function getArrivalCounties() {
-  const res = await fetch(
-    'https://www.ryanair.com/api/views/locate/3/countries/en',
-    { cache: 'force-cache' }
-  ); // Cached
-  return res.json();
-}
+import { getCountriesWithAirports } from '@/utils/api';
 
 const ArrivalCountries = async () => {
-  const arrivalCounties = await getArrivalCounties();
-
-  return <AvailableCountries direction="arrival" countries={arrivalCounties} />;
+  try {
+    const arrivalCountries = await getCountriesWithAirports();
+    return (
+      <AvailableCountries direction="arrival" countries={arrivalCountries} />
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('Failed to fetch arrival countries');
+    }
+  }
 };
 
 export default ArrivalCountries;

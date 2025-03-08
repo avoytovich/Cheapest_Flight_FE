@@ -1,26 +1,27 @@
 import RelatedAirports from '@/components/RelatedAirports';
-
-async function getArrivalAirports(departure: string) {
-  const res = await fetch(
-    `https://www.ryanair.com/api/views/locate/searchWidget/routes/en/airport/${departure}`,
-    { cache: 'no-store' } // Disable caching
-  );
-  if (!res.ok) throw new Error('Failed to fetch arrival airports');
-  return res.json();
-}
+import { getArrivalAirports } from '@/utils/api';
 
 const GetArrivalAirports = async ({
+  params,
   searchParams,
 }: {
+  params: { id: string };
   searchParams: { departure: string };
 }) => {
+  const { id } = params;
+  const { departure } = searchParams;
+
   try {
-    const { departure } = searchParams;
     const arrivalAirports = await getArrivalAirports(departure);
-    return <RelatedAirports direction="arrival" airports={arrivalAirports} />;
+    const filteredAirports = arrivalAirports.filter(
+      (airport: { arrivalAirport: { country: { code: string } } }) =>
+        airport.arrivalAirport.country.code.toLowerCase() === id.toLowerCase()
+    );
+
+    return <RelatedAirports direction="arrival" airports={filteredAirports} />;
   } catch (error) {
-    console.error(error);
-    return <div>Failed to fetch arrival airports </div>;
+    console.error('Error fetching arrival airports:', error);
+    return <div>Failed to load arrival airports.</div>;
   }
 };
 

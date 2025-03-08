@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { CircularProgress, Box, Card, Typography } from '@mui/material';
 
-import { capitalizeFirstLetter } from '@/utils';
+import { capitalizeFirstLetter } from '@/utils/helpers';
 import { useGeneral } from '@/context/GeneralContext';
 
 type Direction = 'departure' | 'arrival';
