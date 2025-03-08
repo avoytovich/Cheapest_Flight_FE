@@ -1,44 +1,27 @@
 import RelatedAirports from '@/components/RelatedAirports';
-import { getCountriesWithAirports, getArrivalAirports } from '@/utils/api';
-
-export async function generateStaticParams() {
-  try {
-    const countries = await getCountriesWithAirports();
-    return countries.map((country: { code: string }) => ({
-      id: country.code,
-    }));
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    } else {
-      throw new Error('Failed to fetch arrival countries');
-    }
-  }
-}
-
-interface GetArrivalAirportsProps {
-  params: { id: string };
-  searchParams: { departure: string };
-}
+import { getArrivalAirports } from '@/utils/api';
 
 const GetArrivalAirports = async ({
   params,
   searchParams,
-}: GetArrivalAirportsProps) => {
+}: {
+  params: { id: string };
+  searchParams: { departure: string };
+}) => {
+  const { id } = params;
+  const { departure } = searchParams;
+
   try {
-    const { departure } = searchParams;
     const arrivalAirports = await getArrivalAirports(departure);
     const filteredAirports = arrivalAirports.filter(
       (airport: { arrivalAirport: { country: { code: string } } }) =>
-        airport.arrivalAirport.country.code === params.id
+        airport.arrivalAirport.country.code.toLowerCase() === id.toLowerCase()
     );
+
     return <RelatedAirports direction="arrival" airports={filteredAirports} />;
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    } else {
-      throw new Error('Failed to fetch arrival airports');
-    }
+    console.error('Error fetching arrival airports:', error);
+    return <div>Failed to load arrival airports.</div>;
   }
 };
 
