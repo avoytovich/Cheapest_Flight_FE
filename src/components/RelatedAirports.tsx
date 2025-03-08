@@ -1,11 +1,10 @@
 'use client';
 
 import { Box, Card, Typography } from '@mui/material';
-import { useParams } from 'next/navigation';
 import Link from 'next/link';
 
 import { useGeneral } from '@/context/GeneralContext';
-import { capitalizeFirstLetter } from '@/utils';
+import { capitalizeFirstLetter } from '@/utils/helpers';
 
 type Direction = 'departure' | 'arrival';
 
@@ -40,8 +39,6 @@ const RelatedAirports: React.FC<RelatedAirportsProps> = ({
     setEndDate,
     currency,
   } = useGeneral();
-  const params = useParams();
-  const id = params?.id as string;
 
   const handleDeparture = (airport: string) => {
     setDeparture(airport);
@@ -64,13 +61,7 @@ const RelatedAirports: React.FC<RelatedAirportsProps> = ({
     );
   }
 
-  const filteredAirports = airports.filter((airport) => {
-    if (direction === 'departure')
-      return (airport as DepartureAirport).country.code === id;
-    return (airport as ArrivalAirport).arrivalAirport.country.code === id;
-  });
-
-  if (filteredAirports.length === 0)
+  if (airports.length === 0)
     return (
       <Typography variant="h6" textAlign="center">
         {`${direction === 'departure' ? 'No airports available for this country' : `No airports available in this country from ${departure}`}`}
@@ -80,7 +71,7 @@ const RelatedAirports: React.FC<RelatedAirportsProps> = ({
   return (
     <Box p={4} className="h-screen">
       <Typography variant="h4" textAlign="center" gutterBottom>
-        {`${capitalizeFirstLetter(direction)} airports in ${direction === 'departure' ? (filteredAirports[0] as DepartureAirport).country.name : (filteredAirports[0] as ArrivalAirport).arrivalAirport.country.name}`}
+        {`${capitalizeFirstLetter(direction)} airports in ${direction === 'departure' ? (airports[0] as DepartureAirport).country.name : (airports[0] as ArrivalAirport).arrivalAirport.country.name}`}
       </Typography>
       <Box margin="0 auto" maxWidth="75%">
         <Box
@@ -88,7 +79,7 @@ const RelatedAirports: React.FC<RelatedAirportsProps> = ({
           gridTemplateColumns="repeat(auto-fill, minmax(200px, 1fr))"
           gap={3}
         >
-          {filteredAirports.map((airport) => (
+          {airports.map((airport) => (
             <Link
               key={
                 direction === 'departure'
