@@ -182,6 +182,7 @@ export default function ValuableInfo() {
         const ticket =
           data?.outbound?.fares.find((t: Ticket) => t.day === requestedDay) ||
           null;
+        localStorage.setItem('recommendation', JSON.stringify(ticket));
         setRecommendation(ticket);
       } catch (err) {
         console.error(`Error fetching ticket data: ${err}`);
@@ -279,6 +280,15 @@ export default function ValuableInfo() {
       availableStartDates,
     ]
   );
+
+  useEffect(() => {
+    setRecommendationStart(
+      JSON.parse(localStorage.getItem('recommendation') || 'null')
+    );
+    setRecommendationEnd(
+      JSON.parse(localStorage.getItem('recommendation') || 'null')
+    );
+  }, []);
 
   useEffect(() => {
     fetchTicketData(
