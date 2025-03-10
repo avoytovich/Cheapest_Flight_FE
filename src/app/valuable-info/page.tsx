@@ -91,8 +91,8 @@ const TicketInfo: React.FC<TicketInfoProps> = ({
             className={`mt-2 text-sm font-semibold ${budgetDifference < 0 ? 'text-red-500' : 'text-green-600'}`}
           >
             {budgetDifference > 0
-              ? `Save ${Math.abs(budgetDifference).toFixed(2)} ${ticket.price?.currencySymbol}`
-              : `+${budgetDifference.toFixed(2)} ${ticket.price?.currencySymbol} extra`}
+              ? `Save on your budget: ${Math.abs(budgetDifference).toFixed(2)} ${ticket.price?.currencySymbol}`
+              : `Extra expenses: ${budgetDifference.toFixed(2)} ${ticket.price?.currencySymbol}`}
           </p>
         )}
 
@@ -339,16 +339,7 @@ export default function ValuableInfo() {
 
   const durationChangeNotice =
     startTicket && endTicket && recommendationStart && recommendationEnd
-      ? Math.abs(
-          new Date(recommendationEnd.day).getDate() -
-            new Date(recommendationStart.day).getDate()
-        ) !==
-        Math.abs(
-          new Date(endTicket.day).getDate() -
-            new Date(startTicket.day).getDate()
-        )
-        ? 'Trip duration has changed. Please verify.'
-        : ''
+      ? 'Trip dates, departure and arrival times as well as duration may change'
       : '';
 
   const startPrice = startTicket?.price?.value ?? 0;
@@ -361,24 +352,34 @@ export default function ValuableInfo() {
 
   return (
     <div className="flex flex-col items-center gap-6 p-4">
-      <h1 className="text-2xl font-bold text-center">Ticket Information</h1>
+      <h1 className="text-2xl font-bold text-center">Tickets Information</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <TicketInfo title="Selected Departure" ticket={startTicket} />
         <TicketInfo title="Selected Return" ticket={endTicket} />
-        <TicketInfo
-          title="Recommended Departure"
-          ticket={recommendationStart}
-          isRecommended
-          budgetDifference={budgetDifferenceStart}
-          tripDurationChangeNotice={durationChangeNotice}
-        />
-        <TicketInfo
-          title="Recommended Return"
-          ticket={recommendationEnd}
-          isRecommended
-          budgetDifference={budgetDifferenceEnd}
-          tripDurationChangeNotice={durationChangeNotice}
-        />
+        {budgetDifferenceStart + budgetDifferenceEnd > 0 ? (
+          <>
+            <TicketInfo
+              title="Recommended Departure"
+              ticket={recommendationStart}
+              isRecommended
+              budgetDifference={budgetDifferenceStart}
+              tripDurationChangeNotice={durationChangeNotice}
+            />
+            <TicketInfo
+              title="Recommended Return"
+              ticket={recommendationEnd}
+              isRecommended
+              budgetDifference={budgetDifferenceEnd}
+              tripDurationChangeNotice={durationChangeNotice}
+            />
+          </>
+        ) : (
+          <div className="col-span-2 flex flex-col items-center justify-center p-6 border-4 border-orange-400 bg-red-50 rounded-2xl shadow-lg">
+            <p className="text-center font-medium">
+              No recommendations available
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
