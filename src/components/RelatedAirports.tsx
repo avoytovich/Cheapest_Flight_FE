@@ -62,10 +62,18 @@ const RelatedAirports: React.FC<RelatedAirportsProps> = ({
   }
 
   if (airports.length === 0)
-    return (
-      <Typography variant="h6" textAlign="center">
-        {`${direction === 'departure' ? 'No airports available for this country' : `No airports available in this country from ${departure}`}`}
-      </Typography>
+    return direction === 'departure' ? (
+      <div className="error col-span-2 flex flex-col items-center justify-center p-6 border-4 border-orange-400 bg-red-50 rounded-2xl shadow-lg">
+        <h1>No, way! 😢</h1>
+        <p className="text-center font-medium">
+          No airports available for this country
+        </p>
+      </div>
+    ) : (
+      <div className="error col-span-2 flex flex-col items-center justify-center p-6 border-4 border-orange-400 bg-red-50 rounded-2xl shadow-lg">
+        <h1>No, way! 😢</h1>
+        <p className="text-center font-medium">{`No arrival airports available in this country from ${departure}`}</p>
+      </div>
     );
 
   return (
