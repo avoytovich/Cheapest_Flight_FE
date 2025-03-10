@@ -19,11 +19,7 @@ const TripDetail = ({
   );
 };
 
-export default function LayoutWrapper({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function LayoutWrapper() {
   const { departure, arrival, startDate, endDate, currency } = useGeneral();
   const pathname = usePathname();
   const isFirstPage = pathname === '/'; // Hide for the first page
@@ -45,7 +41,7 @@ export default function LayoutWrapper({
   return (
     <div className="flex">
       {!isFirstPage && (
-        <aside className="w-64 bg-gray-800 text-white h-screen p-6 sticky top-0 hidden md:block">
+        <aside className="w-64 bg-gray-800 text-white p-6 sticky top-0 hidden md:block">
           <h2 className="text-xl font-semibold mb-4">Your Trip</h2>
 
           {/* Steps with dynamic highlighting and conditional visibility */}
@@ -192,7 +188,6 @@ export default function LayoutWrapper({
           </div>
         </aside>
       )}
-      <main className="flex-1 p-6">{children}</main>
     </div>
   );
 }
