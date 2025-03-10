@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
+import { Analytics } from '@vercel/analytics/react';
 import { Geist, Geist_Mono } from 'next/font/google';
 
 import { GeneralProvider } from '@/context/GeneralContext';
 import SideNavigation from '@/components/SideNavigation';
+import Footer from '@/components/Footer';
 
 import './globals.css';
 
@@ -33,7 +35,9 @@ export default function RootLayout({
       >
         <GeneralProvider>
           <SideNavigation>{children}</SideNavigation>
+          <Footer />
         </GeneralProvider>
+        <Analytics />
       </body>
     </html>
   );

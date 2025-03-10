@@ -46,13 +46,14 @@ const LandingPage = () => {
         <h1 className="text-4xl font-bold text-white mb-4">
           Planning travel with Rynair
         </h1>
-        <p className="text-lg text-white mb-14">
-          just pick the cheapest tickets by selecting
-          <br />a departure airport, the travel dates, and an arrival airport
+        <p className="text-lg text-black mb-14">
+          get recommended tickets to save on your budget -
+          <br />
+          just select a departure airport, travel dates, and an arrival airport
         </p>
         <Link href="/departure-countries">
           <button className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-2xl shadow-lg hover:bg-gray-100 transition">
-            Get Started
+            Let&apos;s get started!
           </button>
         </Link>
       </div>
