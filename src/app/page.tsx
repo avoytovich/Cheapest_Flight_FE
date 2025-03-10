@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 const LandingPage = () => {
   return (
-    <div className="relative flex items-center justify-center h-screen overflow-hidden">
+    <div className="relative flex items-center justify-center min-h-screen overflow-hidden">
       {/* Background animation */}
       <motion.div
         className="absolute inset-0 bg-center bg-cover opacity-20"

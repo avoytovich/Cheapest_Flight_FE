@@ -31,12 +31,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-br from-blue-600 to-yellow-600 min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-screen flex flex-col antialiased bg-gradient-to-br from-blue-600 to-yellow-600`}
       >
-        <GeneralProvider>
-          <SideNavigation>{children}</SideNavigation>
+        <div className="flex flex-col flex-grow">
+          <div className="flex flex-grow">
+            <GeneralProvider>
+              <SideNavigation />
+              <div className="flex-grow flex flex-col">
+                <div className="flex-grow">{children}</div>
+              </div>
+            </GeneralProvider>
+          </div>
           <Footer />
-        </GeneralProvider>
+        </div>
         <Analytics />
       </body>
     </html>

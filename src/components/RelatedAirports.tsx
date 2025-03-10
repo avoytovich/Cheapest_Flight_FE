@@ -77,7 +77,7 @@ const RelatedAirports: React.FC<RelatedAirportsProps> = ({
     );
 
   return (
-    <Box p={4} className="h-screen">
+    <Box p={4}>
       <Typography variant="h4" textAlign="center" gutterBottom>
         {`${capitalizeFirstLetter(direction)} airports in ${direction === 'departure' ? (airports[0] as DepartureAirport).country.name : (airports[0] as ArrivalAirport).arrivalAirport.country.name}`}
       </Typography>
