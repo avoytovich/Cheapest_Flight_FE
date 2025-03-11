@@ -1,9 +1,14 @@
 'use client';
 
-import Link from 'next/link';
-import { CircularProgress, Box, Card, Typography } from '@mui/material';
-
-import { capitalizeFirstLetter } from '@/utils/helpers';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+  CircularProgress,
+  Box,
+  Typography,
+  TextField,
+  Autocomplete,
+} from '@mui/material';
 import { useGeneral } from '@/context/GeneralContext';
 
 type Direction = 'departure' | 'arrival';
@@ -25,6 +30,9 @@ const AvailableCountries: React.FC<AvailableCountriesProps> = ({
 }) => {
   const { setCurrency, departure, arrival, startDate, endDate, currency } =
     useGeneral();
+  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
+
+  const router = useRouter();
 
   if (!countries) {
     return (
@@ -42,74 +50,59 @@ const AvailableCountries: React.FC<AvailableCountriesProps> = ({
     );
   }
 
+  const handleCountryChange = (
+    event: React.ChangeEvent<unknown>,
+    newValue: Country | null
+  ) => {
+    setSelectedCountry(newValue);
+    if (newValue) {
+      if (direction === 'departure') {
+        setCurrency(newValue.currency);
+      }
+      // Navigate to the selected country's page
+      const queryParams = new URLSearchParams({
+        ...(departure && { departure }),
+        ...(arrival && { arrival }),
+        ...(startDate && { startDate }),
+        ...(endDate && { endDate }),
+        ...(currency && { currency }),
+      }).toString();
+
+      router.push(`/${direction}-countries/${newValue.code}?${queryParams}`);
+    }
+  };
+
   return (
     <Box p={4}>
       <Typography variant="h4" align="center" gutterBottom>
-        {`${capitalizeFirstLetter(direction)} Countries`}
+        {`${direction.charAt(0).toUpperCase() + direction.slice(1)} Countries`}
       </Typography>
       <Box margin="0 auto" maxWidth="75%">
-        <Box
-          display="grid"
-          gridTemplateColumns="repeat(auto-fill, minmax(120px, 1fr))"
-          gap={3}
-        >
-          {countries
-            .sort((a: Country, b: Country) => a.name.localeCompare(b.name))
-            .map((country) => {
-              const flagUrl = country.code
-                ? `https://flagcdn.com/w320/${country.code.toLowerCase()}.png`
-                : null;
-
-              return (
-                <Link
-                  key={country.name}
-                  href={{
-                    pathname: `/${direction}-countries/${country.code}`,
-                    query: {
-                      ...(departure && { departure }),
-                      ...(arrival && { arrival }),
-                      ...(startDate && { startDate }),
-                      ...(endDate && { endDate }),
-                      ...(currency && { currency }),
-                    },
-                  }}
-                  passHref
-                  prefetch
-                >
-                  <Card
-                    role="button"
-                    tabIndex={0}
-                    sx={{
-                      cursor: 'pointer',
-                      p: 2,
-                      textAlign: 'center',
-                      backgroundColor: 'lightgray',
-                    }}
-                    onClick={() =>
-                      direction === 'departure'
-                        ? setCurrency(country.currency)
-                        : () => {}
-                    }
-                  >
-                    {flagUrl && (
-                      <Box
-                        component="img"
-                        src={flagUrl}
-                        alt={`${country.name} flag`}
-                        sx={{
-                          objectFit: 'cover',
-                          mb: 2,
-                          width: '100%',
-                          height: '80px',
-                        }}
-                      />
-                    )}
-                    <Typography>{country.name}</Typography>
-                  </Card>
-                </Link>
-              );
-            })}
-        </Box>
+        <Autocomplete
+          options={countries.sort((a, b) => a.name.localeCompare(b.name))}
+          getOptionLabel={(option) => option.name}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label={`${direction.charAt(0).toUpperCase() + direction.slice(1)} Country`}
+              variant="outlined"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#000009',
+                  },
+                },
+                '& .MuiInputLabel-root': {
+                  '&.Mui-focused': {
+                    color: '#000009',
+                  },
+                },
+              }}
+            />
+          )}
+          onChange={handleCountryChange}
+          value={selectedCountry}
+        />
       </Box>
     </Box>
   );
