@@ -102,11 +102,13 @@ const RelatedAirports: React.FC<RelatedAirportsProps> = ({
   };
 
   return (
-    <Box p={4}>
+    <Box p={4} minWidth="75%">
       <Typography variant="h4" textAlign="center" gutterBottom>
-        {`${capitalizeFirstLetter(direction)} airports in ${direction === 'departure' ? (airports[0] as DepartureAirport).country.name : (airports[0] as ArrivalAirport).arrivalAirport.country.name}`}
+        {direction === 'departure'
+          ? `Departure airports in ${(airports[0] as DepartureAirport).country.name}`
+          : `Arrival airports in ${(airports[0] as ArrivalAirport).arrivalAirport.country.name}`}
       </Typography>
-      <Box margin="0 auto" maxWidth="75%">
+      <Box>
         <Autocomplete
           options={(airports as (DepartureAirport | ArrivalAirport)[]).sort(
             (a, b) => {

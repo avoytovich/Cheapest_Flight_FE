@@ -10,6 +10,7 @@ import {
   Autocomplete,
 } from '@mui/material';
 import { useGeneral } from '@/context/GeneralContext';
+import { capitalizeFirstLetter } from '@/utils/helpers';
 
 type Direction = 'departure' | 'arrival';
 
@@ -73,18 +74,18 @@ const AvailableCountries: React.FC<AvailableCountriesProps> = ({
   };
 
   return (
-    <Box p={4}>
+    <Box p={4} minWidth="75%">
       <Typography variant="h4" align="center" gutterBottom>
-        {`${direction.charAt(0).toUpperCase() + direction.slice(1)} Countries`}
+        {`${direction === 'departure' ? 'DEPARTURE' : 'ARRIVAL'}`}
       </Typography>
-      <Box margin="0 auto" maxWidth="75%">
+      <Box>
         <Autocomplete
           options={countries.sort((a, b) => a.name.localeCompare(b.name))}
           getOptionLabel={(option) => option.name}
           renderInput={(params) => (
             <TextField
               {...params}
-              label={`${direction.charAt(0).toUpperCase() + direction.slice(1)} Country`}
+              label={`${capitalizeFirstLetter(direction)} Country`}
               variant="outlined"
               sx={{
                 '& .MuiOutlinedInput-root': {
