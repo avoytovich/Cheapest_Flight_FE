@@ -25,11 +25,21 @@ const LandingPage = () => {
         className="absolute"
         src="plane.svg"
         alt="Side view plane"
-        initial={{ x: '-230%', y: '70%' }}
+        initial={{ x: '-200%', y: '-200%' }}
         animate={{
-          x: '230%',
-          y: ['115%', '110%', '35%', '35%', '35%', '110%', '115%'],
-          rotate: [0, -5, 5, 0],
+          x: '200%',
+          y: [
+            '-200%',
+            '-200%',
+            '-200%',
+            '-210%',
+            '-235%',
+            '-210%',
+            '-200%',
+            '-200%',
+            '-200%',
+          ],
+          rotate: [0, 0, 0, -5, -5, -5, 0, 0, 0],
         }}
         transition={{
           repeat: Infinity,
@@ -42,19 +52,37 @@ const LandingPage = () => {
       />
 
       {/* Main content */}
-      <div className="z-10 text-center">
-        <h1 className="text-4xl font-bold text-white mb-4">
-          Planning travel with Rynair
-        </h1>
-        <p className="text-lg text-black mb-14">
-          get recommended tickets to save on your budget -
+      <div className="relative top-4 w-screen z-10 text-center px-4">
+        <h1 className="text-2xl text-white md:text-4xl font-bold mb-6">
+          R<span className="text-blue-500">YAN</span>AI
+          <span className="text-blue-500">R</span>
           <br />
-          just select a departure airport, travel dates, and an arrival airport
+          planning travel
+        </h1>
+        <p className="text-sm md:text-lg text-white mb-2">
+          get recommended tickets
+          <br />
+          to save on your budget -
+          <br />
+          just select a departure airport,
+          <br /> travel dates, and an arrival airport
         </p>
         <Link href="/departure-countries">
-          <button className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-2xl shadow-lg hover:bg-gray-100 transition">
-            Let&apos;s get started!
-          </button>
+          <motion.button className="relative top-8 inline-flex items-center px-2 py-0 text-red-500 hover:text-green-500 bg-gray-700 opacity-75 rounded-lg shadow-md">
+            <span className="text-sm md:text-lg font-bold">FASTEN</span>
+            <motion.img
+              className="h-10 md:h-20"
+              src="seatbelt.svg"
+              alt="Seatbelt Icon"
+              animate={{ opacity: [1, 0.5, 1] }}
+              transition={{ repeat: Infinity, duration: 1 }}
+              style={{
+                filter:
+                  'invert(33%) sepia(100%) saturate(1000%) hue-rotate(30deg) brightness(100%) contrast(100%)',
+              }}
+            />
+            <span className="text-sm md:text-lg font-bold">SEATBELT</span>
+          </motion.button>
         </Link>
       </div>
     </div>

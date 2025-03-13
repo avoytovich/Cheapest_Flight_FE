@@ -3,7 +3,8 @@ import { Analytics } from '@vercel/analytics/react';
 import { Geist, Geist_Mono } from 'next/font/google';
 
 import { GeneralProvider } from '@/context/GeneralContext';
-import SideNavigation from '@/components/SideNavigation';
+import TrackSteps from '@/components/TrackSteps';
+import TrackChoise from '@/components/TrackChoise';
 import Footer from '@/components/Footer';
 
 import './globals.css';
@@ -34,14 +35,15 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen flex flex-col antialiased bg-gradient-to-br from-blue-600 to-yellow-600`}
       >
         <div className="flex flex-col flex-grow">
-          <div className="flex flex-grow">
-            <GeneralProvider>
-              <SideNavigation />
-              <div className="flex-grow flex flex-col">
-                <div className="flex-grow">{children}</div>
+          <GeneralProvider>
+            <TrackSteps />
+            <div className="flex-grow flex">
+              <div className="flex-grow flex justify-center items-center">
+                {children}
               </div>
-            </GeneralProvider>
-          </div>
+            </div>
+            <TrackChoise />
+          </GeneralProvider>
           <Footer />
         </div>
         <Analytics />

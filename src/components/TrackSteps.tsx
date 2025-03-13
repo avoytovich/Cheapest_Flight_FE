@@ -4,22 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useGeneral } from '@/context/GeneralContext';
 
-const TripDetail = ({
-  label,
-  value,
-}: {
-  label: string;
-  value: string | null;
-}) => {
-  return (
-    <div className="p-3 mb-4 rounded-lg bg-gray-700 text-gray-300">
-      <span className="text-sm">{label}</span>
-      <p className="text-lg font-medium">{value || 'Not selected'}</p>
-    </div>
-  );
-};
-
-export default function LayoutWrapper() {
+export default function TrackSteps() {
   const { departure, arrival, startDate, endDate, currency } = useGeneral();
   const pathname = usePathname();
   const isFirstPage = pathname === '/'; // Hide for the first page
@@ -39,13 +24,13 @@ export default function LayoutWrapper() {
     isArrivalCompleted && startDate !== null && endDate !== null;
 
   return (
-    <div className="flex">
+    <div className="flex flex-col md:flex-row">
       {!isFirstPage && (
-        <aside className="w-64 bg-gray-800 text-white p-6 sticky top-0 hidden md:block">
-          <h2 className="text-xl font-semibold mb-4">Your Trip</h2>
+        <div className="w-full bg-gray-800 text-white p-6 sticky top-0 flex flex-col md:flex-row justify-center md:space-x-6">
+          <h2 className="text-xl font-semibold mb-4 md:mb-0">Trip step</h2>
 
           {/* Steps with dynamic highlighting and conditional visibility */}
-          <div className="space-y-3 space-x-1 text-gray-400">
+          <div className="flex flex-col md:flex-row justify-center space-y-3 md:space-y-0 md:space-x-3 text-gray-400">
             <Link
               href={
                 isDepartureCompleted
@@ -75,7 +60,7 @@ export default function LayoutWrapper() {
                 >
                   1
                 </span>{' '}
-                Choose Departure
+                Departure
               </p>
             </Link>
 
@@ -108,7 +93,7 @@ export default function LayoutWrapper() {
                 >
                   2
                 </span>{' '}
-                Select Arrival
+                Arrival
               </p>
             </Link>
 
@@ -174,19 +159,11 @@ export default function LayoutWrapper() {
                 >
                   4
                 </span>{' '}
-                Get valuable information
+                Recommendation
               </p>
             </Link>
           </div>
-
-          {/* Trip Details with URL-based Highlighting */}
-          <div className="mt-6 border-t border-gray-700 pt-4 space-y-3">
-            <TripDetail label="Departure" value={departure} />
-            <TripDetail label="Arrival" value={arrival} />
-            <TripDetail label="Starting point" value={startDate} />
-            <TripDetail label="End point" value={endDate} />
-          </div>
-        </aside>
+        </div>
       )}
     </div>
   );
