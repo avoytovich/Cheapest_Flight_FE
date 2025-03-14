@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-screen flex flex-col antialiased bg-gradient-to-br from-blue-600 to-yellow-600`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-screen flex flex-col antialiased bg-gradient-to-br from-blue-600 to-yellow-600 overflow-hidden`}
       >
         <div className="flex flex-col flex-grow">
           <GeneralProvider>
