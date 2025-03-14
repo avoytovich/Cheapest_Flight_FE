@@ -125,7 +125,10 @@ export default function AvailableDates() {
           }
           if (
             range?.to &&
-            availableEndDates.includes(format(range.to, 'yyyy-MM-dd'))
+            availableEndDates.includes(format(range.to, 'yyyy-MM-dd')) &&
+            range.to &&
+            range.from &&
+            format(range.to, 'yyyy-MM-dd') !== format(range.from, 'yyyy-MM-dd')
           ) {
             setEndDate(format(range.to, 'yyyy-MM-dd'));
             const queryParams = new URLSearchParams(window.location.search);
@@ -171,9 +174,12 @@ export default function AvailableDates() {
           !availableEndDates.includes(format(date, 'yyyy-MM-dd'))
         }
       />
-      {startDate && endDate && (
+      {startDate && (
         <>
-          <Typography variant="body1">{`Selected Dates: ${startDate} to ${endDate}`}</Typography>
+          <Typography variant="body1">
+            {`Selected Start Date: ${startDate}`}
+            {endDate && ` to ${endDate}`}
+          </Typography>
           <Button
             variant="contained"
             color="primary"
@@ -199,8 +205,14 @@ export default function AvailableDates() {
         </DialogTitle>
         <DialogContent>
           <Typography textAlign="center" sx={{ mb: 2 }}>
-            You have selected <strong>{startDate}</strong> to{' '}
-            <strong>{endDate}</strong>. Do you want to proceed to valuable info?
+            You have selected <strong>{startDate}</strong>
+            {endDate && (
+              <>
+                {' to '}
+                <strong>{endDate}</strong>
+              </>
+            )}
+            . Do you want to proceed to valuable info?
           </Typography>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center', gap: 2 }}>
