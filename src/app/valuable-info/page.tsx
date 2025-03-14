@@ -91,7 +91,7 @@ const TicketInfo: React.FC<TicketInfoProps> = ({
             className={`mt-2 text-sm font-semibold ${budgetDifference < 0 ? 'text-red-500' : 'text-green-600'}`}
           >
             {budgetDifference > 0
-              ? `Save on your budget: ${Math.abs(budgetDifference).toFixed(2)} ${ticket.price?.currencySymbol}`
+              ? `Save on your budget: +${Math.abs(budgetDifference).toFixed(2)} ${ticket.price?.currencySymbol}`
               : `Extra expenses: ${budgetDifference.toFixed(2)} ${ticket.price?.currencySymbol}`}
           </p>
         )}
@@ -367,7 +367,7 @@ export default function ValuableInfo() {
             />
             <TicketInfo
               title="Recommended Return"
-              ticket={recommendationEnd}
+              ticket={endTicket && recommendationEnd}
               isRecommended
               budgetDifference={budgetDifferenceEnd}
               tripDurationChangeNotice={durationChangeNotice}
