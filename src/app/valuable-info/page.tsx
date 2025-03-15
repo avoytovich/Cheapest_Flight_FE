@@ -298,7 +298,9 @@ export default function ValuableInfo() {
       currency,
       setStartPointTicket
     );
-    fetchTicketData(arrival, departure, endDate, currency, setEndPointTicket);
+    if (endDate) {
+      fetchTicketData(arrival, departure, endDate, currency, setEndPointTicket);
+    }
   }, [departure, arrival, startDate, endDate, currency, fetchTicketData]);
 
   useEffect(() => {
@@ -316,6 +318,10 @@ export default function ValuableInfo() {
           setRecommendationEnd(cheapestEnd);
           handleRecommendedEndDate(cheapestEnd);
         }
+      }
+      if (cheapestStart && !cheapestEnd) {
+        setRecommendationEnd(cheapestStart);
+        handleRecommendedEndDate(cheapestStart);
       }
     };
     fetchRecommendations();
@@ -356,7 +362,8 @@ export default function ValuableInfo() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <TicketInfo title="Selected Departure" ticket={startTicket} />
         <TicketInfo title="Selected Return" ticket={endTicket} />
-        {budgetDifferenceStart + budgetDifferenceEnd > 0 ? (
+        {budgetDifferenceStart + budgetDifferenceEnd > 0 ||
+        (!endTicket && budgetDifferenceStart > 0) ? (
           <>
             <TicketInfo
               title="Recommended Departure"

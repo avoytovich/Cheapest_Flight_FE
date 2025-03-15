@@ -20,8 +20,7 @@ export default function TrackSteps() {
   const isDepartureCompleted = departure !== null && departure !== '';
   const isArrivalCompleted =
     isDepartureCompleted && arrival !== null && arrival !== '';
-  const isDatesCompleted =
-    isArrivalCompleted && startDate !== null && endDate !== null;
+  const isDatesCompleted = isArrivalCompleted && startDate !== null;
 
   return (
     <div className="flex flex-col md:flex-row">
