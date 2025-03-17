@@ -38,7 +38,17 @@ const TicketInfo: React.FC<TicketInfoProps> = ({
   budgetDifference = null,
   tripDurationChangeNotice = '',
 }) => {
+  const { departure, arrival } = useGeneral();
+
+  const isSelectedDeparture = title === 'Selected Departure';
+  const isSelectedReturn = title === 'Selected Return';
+  const isRecommendedDeparture = title === 'Recommended Departure';
+  const isRecommendedReturn = title === 'Recommended Return';
+
   if (!ticket) return null;
+
+  const externalLinkSelected = `https://www.ryanair.com/gb/en/trip/flights/select?adults=1&teens=0&children=0&infants=0&dateOut=${ticket.day}&dateIn=&isConnectedFlight=false&discount=0&promoCode=&isReturn=false&originIata=${isSelectedDeparture ? departure : isSelectedReturn ? arrival : ''}&destinationIata=${isSelectedDeparture ? arrival : isSelectedReturn ? departure : ''}&tpAdults=1&tpTeens=0&tpChildren=0&tpInfants=0&tpStartDate=${ticket.day}&tpEndDate=&tpDiscount=0&tpPromoCode=&tpOriginIata=${isSelectedDeparture ? departure : isSelectedReturn ? arrival : ''}&tpDestinationIata=${isSelectedDeparture ? arrival : isSelectedReturn ? departure : ''}`;
+  const externalLinkRecommended = `https://www.ryanair.com/gb/en/trip/flights/select?adults=1&teens=0&children=0&infants=0&dateOut=${ticket.day}&dateIn=&isConnectedFlight=false&discount=0&promoCode=&isReturn=false&originIata=${isRecommendedDeparture ? departure : isRecommendedReturn ? arrival : ''}&destinationIata=${isRecommendedDeparture ? arrival : isRecommendedReturn ? departure : ''}&tpAdults=1&tpTeens=0&tpChildren=0&tpInfants=0&tpStartDate=${ticket.day}&tpEndDate=&tpDiscount=0&tpPromoCode=&tpOriginIata=${isRecommendedDeparture ? departure : isRecommendedReturn ? arrival : ''}&tpDestinationIata=${isRecommendedDeparture ? arrival : isRecommendedReturn ? departure : ''}`;
 
   return (
     <div
@@ -101,6 +111,14 @@ const TicketInfo: React.FC<TicketInfoProps> = ({
             {tripDurationChangeNotice}
           </p>
         )}
+        <a
+          href={isRecommended ? externalLinkRecommended : externalLinkSelected}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 inline-block text-blue-500 underline"
+        >
+          ✈️ Book ✈️
+        </a>
       </div>
     </div>
   );
@@ -362,7 +380,8 @@ export default function ValuableInfo() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <TicketInfo title="Selected Departure" ticket={startTicket} />
         <TicketInfo title="Selected Return" ticket={endTicket} />
-        {budgetDifferenceStart + budgetDifferenceEnd > 0 ||
+        {(budgetDifferenceStart + budgetDifferenceEnd > 0 &&
+          recommendationStart?.day !== recommendationEnd?.day) ||
         (!endTicket && budgetDifferenceStart > 0) ? (
           <>
             <TicketInfo
