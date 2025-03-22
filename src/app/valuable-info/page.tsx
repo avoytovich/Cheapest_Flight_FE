@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Clock, Calendar } from 'lucide-react';
+import { Box, CircularProgress } from '@mui/material';
+
 import { useGeneral } from '@/context/GeneralContext';
 
 interface Price {
@@ -136,10 +138,11 @@ export default function ValuableInfo() {
   const [recommendationEnd, setRecommendationEnd] = useState<Ticket | null>(
     null
   );
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const {
+    loading,
+    setLoading,
     departure,
     arrival,
     startDate,
@@ -209,7 +212,7 @@ export default function ValuableInfo() {
         setLoading(false);
       }
     },
-    []
+    [setLoading]
   );
 
   const fetchTicketData = useCallback(
@@ -234,7 +237,7 @@ export default function ValuableInfo() {
         setLoading(false);
       }
     },
-    []
+    [setLoading]
   );
 
   const handleRecommendedStartDate = useCallback(
@@ -350,12 +353,18 @@ export default function ValuableInfo() {
     handleRecommendedEndDate,
   ]);
 
-  if (loading)
+  useEffect(() => {
+    return () => setLoading(true);
+  }, [setLoading]);
+
+  if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen animate-pulse text-blue-500">
-        Loading...
-      </div>
+      <Box display="flex" justifyContent="center" alignItems="center" p={4}>
+        <CircularProgress />
+      </Box>
     );
+  }
+
   if (error)
     return (
       <p className="text-center text-red-500 font-medium">Error: {error}</p>
@@ -377,36 +386,36 @@ export default function ValuableInfo() {
   return (
     <div className="flex flex-col items-center gap-6 p-4">
       <h1 className="text-2xl font-bold text-center">Tickets Information</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         <TicketInfo title="Selected Departure" ticket={startTicket} />
         <TicketInfo title="Selected Return" ticket={endTicket} />
-        {(budgetDifferenceStart + budgetDifferenceEnd > 0 &&
-          recommendationStart?.day !== recommendationEnd?.day) ||
-        (!endTicket && budgetDifferenceStart > 0) ? (
-          <>
-            <TicketInfo
-              title="Recommended Departure"
-              ticket={recommendationStart}
-              isRecommended
-              budgetDifference={budgetDifferenceStart}
-              tripDurationChangeNotice={durationChangeNotice}
-            />
-            <TicketInfo
-              title="Recommended Return"
-              ticket={endTicket && recommendationEnd}
-              isRecommended
-              budgetDifference={budgetDifferenceEnd}
-              tripDurationChangeNotice={durationChangeNotice}
-            />
-          </>
-        ) : (
-          <div className="col-span-2 flex flex-col items-center justify-center p-6 border-4 border-orange-400 bg-red-50 rounded-2xl shadow-lg">
-            <p className="text-center font-medium">
-              No recommendations available
-            </p>
-          </div>
-        )}
       </div>
+      {(budgetDifferenceStart + budgetDifferenceEnd > 0 &&
+        recommendationStart?.day !== recommendationEnd?.day) ||
+      (!endTicket && budgetDifferenceStart > 0) ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+          <TicketInfo
+            title="Recommended Departure"
+            ticket={recommendationStart}
+            isRecommended
+            budgetDifference={budgetDifferenceStart}
+            tripDurationChangeNotice={durationChangeNotice}
+          />
+          <TicketInfo
+            title="Recommended Return"
+            ticket={endTicket && recommendationEnd}
+            isRecommended
+            budgetDifference={budgetDifferenceEnd}
+            tripDurationChangeNotice={durationChangeNotice}
+          />
+        </div>
+      ) : (
+        <div className="col-span-2 flex flex-col items-center justify-center p-6 border-4 border-orange-400 bg-red-50 rounded-2xl shadow-lg">
+          <p className="text-center font-medium">
+            No recommendations available
+          </p>
+        </div>
+      )}
     </div>
   );
 }
