@@ -4,6 +4,8 @@ import React, { createContext, useContext, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 interface GeneralContextType {
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
   departure: string | null;
   setDeparture: (airport: string | null) => void;
   arrival: string | null;
@@ -21,6 +23,8 @@ interface GeneralContextType {
 }
 
 const GeneralContext = createContext<GeneralContextType>({
+  loading: true,
+  setLoading: () => {},
   departure: null,
   setDeparture: () => {},
   arrival: null,
@@ -69,10 +73,13 @@ const GeneralProviderContent: React.FC<{ children: React.ReactNode }> = ({
   const [availableEndDates, setAvailableEndDates] = useState<string[] | []>(
     savedAvailableEndDates || []
   );
+  const [loading, setLoading] = useState(true);
 
   return (
     <GeneralContext.Provider
       value={{
+        loading,
+        setLoading,
         departure,
         setDeparture,
         arrival,

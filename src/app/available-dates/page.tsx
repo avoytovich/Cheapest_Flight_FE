@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  CircularProgress,
 } from '@mui/material';
 import { format } from 'date-fns';
 import { DayPicker } from 'react-day-picker';
@@ -18,12 +19,13 @@ import 'react-day-picker/dist/style.css';
 import { useGeneral } from '@/context/GeneralContext';
 
 export default function AvailableDates() {
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const router = useRouter();
   const {
+    loading,
+    setLoading,
     departure,
     arrival,
     startDate,
@@ -38,6 +40,7 @@ export default function AvailableDates() {
 
   const handleConfirm = () => {
     setConfirmOpen(false);
+    setLoading(true);
     const queryParams = new URLSearchParams(window.location.search);
     router.push(`/valuable-info?${queryParams.toString()}`);
   };
@@ -70,17 +73,18 @@ export default function AvailableDates() {
     };
 
     fetchAvailableDates();
-  }, [departure, arrival, setAvailableStartDates, setAvailableEndDates]);
+  }, [
+    departure,
+    arrival,
+    setAvailableStartDates,
+    setAvailableEndDates,
+    setLoading,
+  ]);
 
   if (loading)
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-      >
-        <Typography>Loading...</Typography>
+      <Box display="flex" justifyContent="center" alignItems="center" p={4}>
+        <CircularProgress />
       </Box>
     );
 
@@ -92,7 +96,15 @@ export default function AvailableDates() {
     );
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
+    <Box
+      sx={{
+        margin: 4,
+      }}
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      gap={2}
+    >
       <Typography variant="h6">Select Your Travel Dates</Typography>
       <DayPicker
         mode="range"
