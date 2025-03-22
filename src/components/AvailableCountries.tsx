@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   CircularProgress,
@@ -29,33 +29,26 @@ const AvailableCountries: React.FC<AvailableCountriesProps> = ({
   direction,
   countries,
 }) => {
-  const { setCurrency, departure, arrival, startDate, endDate, currency } =
-    useGeneral();
+  const {
+    loading,
+    setLoading,
+    setCurrency,
+    departure,
+    arrival,
+    startDate,
+    endDate,
+    currency,
+  } = useGeneral();
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
 
   const router = useRouter();
-
-  if (!countries) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" p={4}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (!countries.length) {
-    return (
-      <Typography align="center" color="textSecondary">
-        {`No ${direction} countries available.`}
-      </Typography>
-    );
-  }
 
   const handleCountryChange = (
     event: React.ChangeEvent<unknown>,
     newValue: Country | null
   ) => {
     setSelectedCountry(newValue);
+    setLoading(true);
     if (newValue) {
       if (direction === 'departure') {
         setCurrency(newValue.currency);
@@ -72,6 +65,28 @@ const AvailableCountries: React.FC<AvailableCountriesProps> = ({
       router.push(`/${direction}-countries/${newValue.code}?${queryParams}`);
     }
   };
+
+  useEffect(() => {
+    if (countries) {
+      setLoading(false);
+    }
+  }, [countries, setLoading]);
+
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" p={4}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (!countries.length) {
+    return (
+      <Typography align="center" color="textSecondary">
+        {`No ${direction} countries available.`}
+      </Typography>
+    );
+  }
 
   return (
     <Box p={4} minWidth="75%">

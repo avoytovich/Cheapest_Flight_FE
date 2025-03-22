@@ -1,8 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Box, Typography, TextField, Autocomplete } from '@mui/material';
+import {
+  Box,
+  Typography,
+  TextField,
+  Autocomplete,
+  CircularProgress,
+} from '@mui/material';
 import { useGeneral } from '@/context/GeneralContext';
 import { capitalizeFirstLetter } from '@/utils/helpers';
 
@@ -32,6 +38,8 @@ const RelatedAirports: React.FC<RelatedAirportsProps> = ({
   airports,
 }) => {
   const {
+    loading,
+    setLoading,
     departure,
     setDeparture,
     setArrival,
@@ -58,10 +66,16 @@ const RelatedAirports: React.FC<RelatedAirportsProps> = ({
     setEndDate(null);
   };
 
-  if (!airports) {
+  useEffect(() => {
+    if (airports) {
+      setLoading(false);
+    }
+  }, [airports, setLoading]);
+
+  if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" p={4}>
-        <Typography variant="h6">Loading...</Typography>
+        <CircularProgress />
       </Box>
     );
   }
@@ -86,6 +100,7 @@ const RelatedAirports: React.FC<RelatedAirportsProps> = ({
     newValue: DepartureAirport | ArrivalAirport | null
   ) => {
     setSelectedAirport(newValue);
+    setLoading(true);
     if (newValue) {
       if (direction === 'departure') {
         handleDeparture((newValue as DepartureAirport).code);
