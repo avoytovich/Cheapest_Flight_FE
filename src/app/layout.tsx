@@ -28,6 +28,12 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.png',
   },
   openGraph: {
+    title: 'Find the Cheapest Flights | Cheapest Flight Finder',
+    description:
+      'Combines trip planning with flexible date options to find the cheapest flights',
+    type: 'website',
+    url: 'https://cheapest-flight-fe.vercel.app/',
+    siteName: 'Flexible Ryanair',
     images: [
       {
         url: '/ryanair.svg',
