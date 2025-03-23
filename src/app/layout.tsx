@@ -20,8 +20,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Departure Countries',
-  description: 'Browse airports by departure country.',
+  title: 'Plan with Ryanair',
+  description: 'Combines trip planning with flexible date options',
+  openGraph: {
+    images: [
+      {
+        url: '/ryanair.svg',
+        width: 1200,
+        height: 630,
+        alt: 'Ryanair Logo',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
